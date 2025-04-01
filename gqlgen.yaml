@@ -1,0 +1,30 @@
+schema:
+  - internal/graph/schema.graphqls  # Path to your GraphQL schema file
+exec:
+  filename: internal/graph/generated.go  # Output file for resolvers and types
+model:
+  filename: internal/graph/models.go  # Output file for models
+resolver:
+  layout: follow-schema  # You can customize how resolvers are generated
+  dir: internal/graph  # Folder where the resolvers will be created
+  package: graph  # Package name
+
+# Add this section to map scalar types
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  String:
+    model:
+      - github.com/99designs/gqlgen/graphql.String
+  Boolean:
+    model:
+      - github.com/99designs/gqlgen/graphql.Boolean

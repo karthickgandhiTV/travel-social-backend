@@ -1,0 +1,56 @@
+type User {
+  id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  profilePicture: String
+  bio: String
+  interests: [String!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+type UserProfile {
+  user: User!
+  travelPreferences: TravelPreferences
+}
+
+type TravelPreferences {
+  id: ID!
+  userId: ID!
+  preferredActivities: [String!]
+  travelStyle: String
+  languagesSpoken: [String!]
+  updatedAt: String!
+}
+
+type AuthResponse {
+  success: Boolean!
+  message: String
+  user: User
+}
+
+type Query {
+  me: User
+  user(id: ID!): User
+  searchUsers(query: String!): [User!]!
+}
+
+type Mutation {
+  updateProfile(input: UpdateProfileInput!): User!
+  updateTravelPreferences(input: UpdateTravelPreferencesInput!): TravelPreferences!
+}
+
+input UpdateProfileInput {
+  firstName: String
+  lastName: String
+  profilePicture: String
+  bio: String
+  interests: [String!]
+}
+
+input UpdateTravelPreferencesInput {
+  preferredActivities: [String!]
+  travelStyle: String
+  languagesSpoken: [String!]
+}
