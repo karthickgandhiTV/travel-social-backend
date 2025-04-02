@@ -8,10 +8,12 @@ import (
 	"context"
 
 	"github.com/karthickgandhiTV/travel-social-backend/internal/auth"
+	"github.com/karthickgandhiTV/travel-social-backend/internal/graph/generated"
+	"github.com/karthickgandhiTV/travel-social-backend/internal/graph/models"
 )
 
 // UpdateProfile updates the user's profile
-func (r *mutationResolver) UpdateProfile(ctx context.Context, input UpdateProfileInput) (*User, error) {
+func (r *mutationResolver) UpdateProfile(ctx context.Context, input models.UpdateProfileInput) (*models.User, error) {
 	userID, err := auth.RequireAuth(ctx)
 	if err != nil {
 		return nil, err
@@ -21,7 +23,7 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, input UpdateProfil
 }
 
 // UpdateTravelPreferences updates the user's travel preferences
-func (r *mutationResolver) UpdateTravelPreferences(ctx context.Context, input UpdateTravelPreferencesInput) (*TravelPreferences, error) {
+func (r *mutationResolver) UpdateTravelPreferences(ctx context.Context, input models.UpdateTravelPreferencesInput) (*models.TravelPreferences, error) {
 	userID, err := auth.RequireAuth(ctx)
 	if err != nil {
 		return nil, err
@@ -31,7 +33,7 @@ func (r *mutationResolver) UpdateTravelPreferences(ctx context.Context, input Up
 }
 
 // Me returns the currently authenticated user
-func (r *queryResolver) Me(ctx context.Context) (*User, error) {
+func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
 	userID, err := auth.RequireAuth(ctx)
 	if err != nil {
 		return nil, err
@@ -41,7 +43,7 @@ func (r *queryResolver) Me(ctx context.Context) (*User, error) {
 }
 
 // User returns a user by ID
-func (r *queryResolver) User(ctx context.Context, id string) (*User, error) {
+func (r *queryResolver) User(ctx context.Context, id string) (*models.User, error) {
 	// Check authentication
 	_, err := auth.RequireAuth(ctx)
 	if err != nil {
@@ -52,7 +54,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*User, error) {
 }
 
 // SearchUsers searches for users based on the provided query
-func (r *queryResolver) SearchUsers(ctx context.Context, query string) ([]*User, error) {
+func (r *queryResolver) SearchUsers(ctx context.Context, query string) ([]*models.User, error) {
 	// Check authentication
 	_, err := auth.RequireAuth(ctx)
 	if err != nil {
@@ -62,11 +64,11 @@ func (r *queryResolver) SearchUsers(ctx context.Context, query string) ([]*User,
 	return r.UserService.SearchUsers(ctx, query)
 }
 
-// Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+// Query returns generated.QueryResolver implementation.
+func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

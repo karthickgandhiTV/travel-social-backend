@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/karthickgandhiTV/travel-social-backend/internal/db"
-	"github.com/karthickgandhiTV/travel-social-backend/internal/graph/model"
+	"github.com/karthickgandhiTV/travel-social-backend/internal/graph/models"
 	"github.com/lib/pq"
 )
 
@@ -20,7 +20,7 @@ func NewRepository(db *db.DB) *Repository {
 	return &Repository{db: db}
 }
 
-func (r *Repository) GetUserByID(ctx context.Context, id string) (*model.User, error) {
+func (r *Repository) GetUserByID(ctx context.Context, id string) (*models.User, error) {
 	query := `
 		SELECT id, email, first_name, last_name, profile_picture, bio, interests, 
 		       created_at, updated_at
@@ -28,7 +28,7 @@ func (r *Repository) GetUserByID(ctx context.Context, id string) (*model.User, e
 		WHERE id = $1
 	`
 
-	var user model.User
+	var user models.User
 	var firstName, lastName, profilePicture, bio sql.NullString
 	var interests []sql.NullString
 	var createdAt, updatedAt time.Time
@@ -72,14 +72,14 @@ func (r *Repository) GetUserByID(ctx context.Context, id string) (*model.User, e
 	return &user, nil
 }
 
-func (r *Repository) CreateUser(ctx context.Context, id, email string) (*model.User, error) {
+func (r *Repository) CreateUser(ctx context.Context, id, email string) (*models.User, error) {
 	query := `
 		INSERT INTO users (id, email)
 		VALUES ($1, $2)
 		RETURNING id, email, created_at, updated_at
 	`
 
-	var user model.User
+	var user models.User
 	var createdAt, updatedAt time.Time
 
 	err := r.db.QueryRowContext(ctx, query, id, email).Scan(
@@ -96,7 +96,7 @@ func (r *Repository) CreateUser(ctx context.Context, id, email string) (*model.U
 	return &user, nil
 }
 
-func (r *Repository) UpdateProfile(ctx context.Context, userID string, input model.UpdateProfileInput) (*model.User, error) {
+func (r *Repository) UpdateProfile(ctx context.Context, userID string, input models.UpdateProfileInput) (*models.User, error) {
 	query := `
 		UPDATE users
 		SET 
@@ -110,7 +110,7 @@ func (r *Repository) UpdateProfile(ctx context.Context, userID string, input mod
 		RETURNING id, email, first_name, last_name, profile_picture, bio, interests, created_at, updated_at
 	`
 
-	var user model.User
+	var user models.User
 	var firstName, lastName, profilePicture, bio sql.NullString
 	var interests []sql.NullString
 	var createdAt, updatedAt time.Time
@@ -152,14 +152,14 @@ func (r *Repository) UpdateProfile(ctx context.Context, userID string, input mod
 	return &user, nil
 }
 
-func (r *Repository) GetTravelPreferences(ctx context.Context, userID string) (*model.TravelPreferences, error) {
+func (r *Repository) GetTravelPreferences(ctx context.Context, userID string) (*models.TravelPreferences, error) {
 	query := `
 		SELECT id, user_id, preferred_activities, travel_style, languages_spoken, updated_at
 		FROM travel_preferences
 		WHERE user_id = $1
 	`
 
-	var prefs model.TravelPreferences
+	var prefs models.TravelPreferences
 	var travelStyle sql.NullString
 	var preferredActivities, languagesSpoken []sql.NullString
 	var updatedAt time.Time
@@ -199,7 +199,7 @@ func (r *Repository) GetTravelPreferences(ctx context.Context, userID string) (*
 	return &prefs, nil
 }
 
-func (r *Repository) UpdateTravelPreferences(ctx context.Context, userID string, input model.UpdateTravelPreferencesInput) (*model.TravelPreferences, error) {
+func (r *Repository) UpdateTravelPreferences(ctx context.Context, userID string, input models.UpdateTravelPreferencesInput) (*models.TravelPreferences, error) {
 	// First check if travel preferences exist for this user
 	var exists bool
 	err := r.db.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM travel_preferences WHERE user_id = $1)", userID).Scan(&exists)
@@ -233,7 +233,7 @@ func (r *Repository) UpdateTravelPreferences(ctx context.Context, userID string,
 		params = []interface{}{userID, pq.Array(input.PreferredActivities), input.TravelStyle, pq.Array(input.LanguagesSpoken)}
 	}
 
-	var prefs model.TravelPreferences
+	var prefs models.TravelPreferences
 	var travelStyle sql.NullString
 	var preferredActivities, languagesSpoken []sql.NullString
 	var updatedAt time.Time
@@ -270,7 +270,7 @@ func (r *Repository) UpdateTravelPreferences(ctx context.Context, userID string,
 	return &prefs, nil
 }
 
-func (r *Repository) SearchUsers(ctx context.Context, query string) ([]*model.User, error) {
+func (r *Repository) SearchUsers(ctx context.Context, query string) ([]*models.User, error) {
 	sqlQuery := `
 		SELECT id, email, first_name, last_name, profile_picture, bio, interests, created_at, updated_at
 		FROM users
@@ -288,9 +288,9 @@ func (r *Repository) SearchUsers(ctx context.Context, query string) ([]*model.Us
 	}
 	defer rows.Close()
 
-	var users []*model.User
+	var users []*models.User
 	for rows.Next() {
-		var user model.User
+		var user models.User
 		var firstName, lastName, profilePicture, bio sql.NullString
 		var interests []sql.NullString
 		var createdAt, updatedAt time.Time

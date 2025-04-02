@@ -1,9 +1,9 @@
 schema:
   - internal/graph/schema.graphqls  # Path to your GraphQL schema file
 exec:
-  filename: internal/graph/generated.go  # Output file for resolvers and types
+  filename: internal/graph/generated/generated.go  # Output file for resolvers and types
 model:
-  filename: internal/graph/models.go  # Output file for models
+  filename: internal/graph/models/models.go  # Output file for models
 resolver:
   layout: follow-schema  # You can customize how resolvers are generated
   dir: internal/graph  # Folder where the resolvers will be created

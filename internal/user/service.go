@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/karthickgandhiTV/travel-social-backend/internal/config"
-	"github.com/karthickgandhiTV/travel-social-backend/internal/graph/model"
+	"github.com/karthickgandhiTV/travel-social-backend/internal/graph/models"
 	ory "github.com/ory/client-go"
 	kratosclient "github.com/ory/kratos-client-go"
 )
@@ -22,11 +22,11 @@ func NewService(repo *Repository, cfg *config.Config) *Service {
 	}
 }
 
-func (s *Service) GetUserByID(ctx context.Context, id string) (*model.User, error) {
+func (s *Service) GetUserByID(ctx context.Context, id string) (*models.User, error) {
 	return s.repo.GetUserByID(ctx, id)
 }
 
-func (s *Service) GetOrCreateUser(ctx context.Context, id string) (*model.User, error) {
+func (s *Service) GetOrCreateUser(ctx context.Context, id string) (*models.User, error) {
 	// Try to get existing user
 	user, err := s.repo.GetUserByID(ctx, id)
 	if err == nil {
@@ -70,19 +70,19 @@ func (s *Service) getUserEmailFromKratos(ctx context.Context, id string) (string
 	return email, nil
 }
 
-func (s *Service) UpdateProfile(ctx context.Context, userID string, input model.UpdateProfileInput) (*model.User, error) {
+func (s *Service) UpdateProfile(ctx context.Context, userID string, input models.UpdateProfileInput) (*models.User, error) {
 	return s.repo.UpdateProfile(ctx, userID, input)
 }
 
-func (s *Service) GetTravelPreferences(ctx context.Context, userID string) (*model.TravelPreferences, error) {
+func (s *Service) GetTravelPreferences(ctx context.Context, userID string) (*models.TravelPreferences, error) {
 	return s.repo.GetTravelPreferences(ctx, userID)
 }
 
-func (s *Service) UpdateTravelPreferences(ctx context.Context, userID string, input model.UpdateTravelPreferencesInput) (*model.TravelPreferences, error) {
+func (s *Service) UpdateTravelPreferences(ctx context.Context, userID string, input models.UpdateTravelPreferencesInput) (*models.TravelPreferences, error) {
 	return s.repo.UpdateTravelPreferences(ctx, userID, input)
 }
 
-func (s *Service) SearchUsers(ctx context.Context, query string) ([]*model.User, error) {
+func (s *Service) SearchUsers(ctx context.Context, query string) ([]*models.User, error) {
 	return s.repo.SearchUsers(ctx, query)
 }
 
@@ -95,7 +95,7 @@ func (s *Service) GetUserSession(ctx context.Context, sessionToken string) (*kra
 		},
 	})
 
-	resp, r, err := client.FrontendApi.ToSession(ctx).
+	resp, r, err := client.FrontendAPI.ToSession(ctx).
 		Cookie("ory_kratos_session=" + sessionToken).
 		Execute()
 

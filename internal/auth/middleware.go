@@ -85,7 +85,7 @@ func validateSession(cfg *config.Config, sessionToken string) (*kratosclient.Ses
 		},
 	})
 
-	resp, r, err := client.FrontendApi.ToSession(context.Background()).
+	resp, r, err := client.FrontendAPI.ToSession(context.Background()).
 		Cookie("ory_kratos_session=" + sessionToken).
 		Execute()
 

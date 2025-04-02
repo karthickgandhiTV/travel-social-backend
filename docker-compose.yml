@@ -15,7 +15,7 @@ services:
   kratos-migrate:
     image: oryd/kratos:v0.13.0
     environment:
-      - DSN=postgres://postgres:postgres@postgres:5432/kratos?sslmode=disable
+      - DSN=postgres://postgres:postgres@postgres:5432/travel_social?sslmode=disable
     volumes:
       - type: bind
         source: ./kratos
@@ -31,7 +31,7 @@ services:
       - "4433:4433" # public
       - "4434:4434" # admin
     environment:
-      - DSN=postgres://postgres:postgres@postgres:5432/kratos?sslmode=disable
+      - DSN=postgres://postgres:postgres@postgres:5432/travel_social?sslmode=disable
       - LOG_LEVEL=debug
     volumes:
       - type: bind
@@ -39,8 +39,8 @@ services:
         target: /etc/config/kratos
     command: serve -c /etc/config/kratos/kratos.yml --dev
     restart: unless-stopped
-    depends_on:
-      - kratos-migrate
+
+
 
   mailslurper:
     image: oryd/mailslurper:latest-smtps
